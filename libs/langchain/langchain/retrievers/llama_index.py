@@ -29,15 +29,13 @@ class LlamaIndexRetriever(BaseRetriever):
             )
         index = cast(BaseGPTIndex, self.index)
 
-        response = index.query(query, response_mode="no_text", **self.query_kwargs)
+        response = index.query(query, **self.query_kwargs)
         response = cast(Response, response)
         # parse source nodes
         docs = []
         for source_node in response.source_nodes:
-            metadata = source_node.extra_info or {}
-            docs.append(
-                Document(page_content=source_node.source_text, metadata=metadata)
-            )
+            metadata = {}
+            docs.append(Document(page_content=source_node.text, metadata=metadata))
         return docs
 
 
